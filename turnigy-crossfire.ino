@@ -39,10 +39,13 @@ void setup(){
 }
 
 int readAndMap(int inPin) {
+  int bottom = 10; // Change this value to trim the in and outpoints
+  int top = 910; // Change this value to trim the in and outpoints
+  
   if(inPin > A4) {
-    return constrain(map(analogRead(inPin), 10, 910, 1000, 2000), 1000, 2000);
+    return constrain(map(analogRead(inPin), bottom, top, 1000, 2000), 1000, 2000); 
   } else {
-   return constrain(map(analogRead(inPin), 10, 910, 2000, 1000), 1000, 2000); 
+   return constrain(map(analogRead(inPin), bottom, top, 2000, 1000), 1000, 2000); 
   }
 }
 
