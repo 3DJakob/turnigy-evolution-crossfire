@@ -14,10 +14,12 @@
 /*this array holds the servo values for the ppm signal
  change theese values in your code (usually servo values move between 1000 and 2000)*/
 int ppm[CHANNEL_NUMBER];
-
+int topRef;
 
 void setup(){  
-
+  Serial.begin(9600);
+  topRef = analogRead(A3) * 2 - 8; // reads the roll stick and sets its middle point as the reference
+  
   //initiallize default ppm values
   for(int i=0; i<CHANNEL_NUMBER; i++){
       ppm[i]= CHANNEL_DEFAULT_VALUE;
@@ -35,17 +37,15 @@ void setup(){
   TCCR1B |= (1 << CS11);  // 8 prescaler: 0,5 microseconds at 16mhz
   TIMSK1 |= (1 << OCIE1A); // enable timer compare interrupt
   sei();
-
 }
 
 int readAndMap(int inPin) {
-  int bottom = 10; // Change this value to trim the in and outpoints
-  int top = 910; // Change this value to trim the in and outpoints
+  int bottom = 0; // Change this value to trim the inpoints
   
   if(inPin > A4) {
-    return constrain(map(analogRead(inPin), bottom, top, 1000, 2000), 1000, 2000); 
+    return constrain(map(analogRead(inPin), bottom, topRef, 1000, 2000), 1000, 2000); 
   } else {
-   return constrain(map(analogRead(inPin), bottom, top, 2000, 1000), 1000, 2000); 
+   return constrain(map(analogRead(inPin), bottom, topRef, 2000, 1000), 1000, 2000); 
   }
 }
 
